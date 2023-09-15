@@ -34,7 +34,6 @@ const Home = () => {
             const totalRemaining = TotalCredit - credits;
 
             if (credits > TotalCredit) {
-                console.log(totalCredit, credits);
                 return alert('credit is over')
             } else {
                 setTotalCredit(credits);
