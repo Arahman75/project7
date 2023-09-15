@@ -5,6 +5,9 @@ import Cart from '../Cart/Cart';
 const Home = () => {
     const [courses, setCourses] = useState([]);
     const [selectCourses, setSelectCourses] = useState([]);
+    const [totalCredit, setTotalCredit] = useState(0);
+    const [remainingCredit, setRemainingCredit] = useState(0);
+    const [totalPrices, setTotalPrices] = useState(0);
 
     useEffect(() => {
         fetch("./courses.json")
@@ -13,10 +16,36 @@ const Home = () => {
     }, []);
 
     const handleSelectCourse = (course) => {
-        const newCourses = [...selectCourses, course]
-        setSelectCourses(newCourses);
+        const isExist = selectCourses.find(courseName => courseName.id == course.id);
+
+
+        let credits = parseInt(course.credit);
+        const TotalCredit = 20;
+        let totalPrice = course.price;
+
+        if (isExist) {
+            return alert('already registration this course')
+        } else {
+            selectCourses.forEach(credit => {
+                credits = credits + parseInt(credit.credit);
+                totalPrice = totalPrice + credit.price;
+
+            });
+            const totalRemaining = TotalCredit - credits;
+
+            if (credits > TotalCredit) {
+                console.log(totalCredit, credits);
+                return alert('credit is over')
+            } else {
+                setTotalCredit(credits);
+                setRemainingCredit(totalRemaining);
+                setTotalPrices(totalPrice);
+                const newCourses = [...selectCourses, course]
+                setSelectCourses(newCourses);
+            }
+        }
     }
-    // console.log(selectCourses);
+
     return (
         <div className='w-[1200px] mx-auto'>
             <h4 className='text-3xl font-bold mb-12'>Course Registration</h4>
@@ -41,7 +70,7 @@ const Home = () => {
                     }
                 </div>
                 <div className='w-3/12 ml-5'>
-                    <Cart selectCourses={selectCourses}></Cart>
+                    <Cart totalPrices={totalPrices} remainingCredit={remainingCredit} selectCourses={selectCourses} totalCredit={totalCredit}></Cart>
                 </div>
 
             </div>
